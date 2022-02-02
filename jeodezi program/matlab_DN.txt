@@ -1,0 +1,64 @@
+>> %% import image/Görüntü Alınıyor
+>> Img = imread('eregli.jpg');
+>> imshow(Img)
+
+>> %% Checking the histogram property/ Histogram özelliğini denetleme
+>> imhist(Img);
+>> title("Histogram")
+
+>> %% The image has band combination of Red, Green, and Blue (RGB). This makes each pixel a 3-Dimensional value [x,y,z]. It needed to be converted to grayscale to focus on a single digital number fr each Pixel Value./ Görüntüde Kırmızı, Yeşil ve Mavi (RGB) bant kombinasyonu vardır. Bu, her pikseli 3 boyutlu bir değer [x,y,z] yapar. Her Piksel Değeri için tek bir dijital sayıya odaklanmak için gri tonlamaya dönüştürülmesi gerekiyordu.
+>> grayImage = im2gray(Img);
+>> imshow(grayImage)
+>> %display histogram/histogramı görüntüleme
+>> imhist(grayImage);
+>> title("Histogram")
+
+
+>> %% Enhancing the Image/Görüntüyü Geliştirme
+>> % Adjust contrast/Karşıtlığı ayarlama
+>> adjust = imadjust(grayImage);
+>> % Checking the histogram property/Histogram özelliğini denetleme
+>> imhist(adjust)
+>> % Sharpening the Image/Görüntüyü Keskinleştirme
+>> Sharpen = imsharpen(grayImage);
+>> % Reducing Hace (atmospheric errors)/Hace'yi Azaltma (atmosferik hatalar)
+>> Reducing_hace= imreducehaze(grayimage);
+
+
+
+>> %% comparing and contrasting the two gray/iki griyi karşılaştırma ve karşılaştırma
+>> imshowpair(grayImage,adjust,"montage")
+>> title("Original and Contrast")
+
+
+>> % calculating area/alanı hesaplama
+>> props = regionprops("table",adjust,"all")
+>> props = regionprops("table",adjust,"area")
+>> areapixels = sum(props.Area)
+
+>> %%Ascertaining the pixel value of the image/Görüntünün piksel değerini tespit etme
+>> imtool(grayImage)
+>> impixel(grayImage)
+
+>> %% Classifying area of same pixel value (Delineate pixel between x and y)/Aynı piksel değerindeki alanı sınıflandırma (x ve y arasındaki pikseli tanımlama).
+>> imshow(grayImage);
+>> cmap = gray(256);
+>> %% Make gray levels x - y red/Gri düzeyleri x - y kırmızı yapma
+>> cmap(58:145,1)=1;
+>> cmap(58:145,2)=0;
+>> cmap(58:145,3)=0;
+>> colormap(gca, cmap);
+>> colorbar;
+hp = impixelinfo();
+
+%% Statistics for the pixel/Piksel istatistikleri
+>>[counts, grayLevels) = imhist(grayImage);
+numPixels = sum(counts(58:145))
+
+
+>>%% Masking the area out/Bölgeyi maskeleme
+>> mask = grayImage >= 58 & grayImage <= 145;
+>> grayImage(~mask) = 0;
+>> listOfValuesInMask = grayImage(mask);
+>> imshow(mask)
+
